@@ -6,31 +6,47 @@
     <title>OPD Case Sheet - Shivom Eye Care</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Interactive Form Component Focus Tweaks */
+        input:focus, textarea:focus, select:focus {
+            background-color: #f8fafc;
+            border-color: #3b82f6;
+        }
+
+        /* High-Fidelity Print Layout Optimization Pipeline */
         @media print {
-            body { background: white; color: black; }
+            body { background: white; color: black; font-size: 11px; }
             .no-print { display: none !important; }
             .print-container { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
-            input, textarea, select { border: none !important; outline: none !important; background: transparent !important; padding: 0 !important; appearance: none; }
-            .grid { display: grid !important; }
+            
+            /* Remove standard input framing constraints when saving PDF */
+            input, textarea, select { 
+                border: none !important; 
+                outline: none !important; 
+                background: transparent !important; 
+                padding: 0 !important; 
+                appearance: none;
+                font-weight: bold;
+            }
+            textarea { resize: none; }
+            placeholder { color: transparent !important; }
+
+            /* Conditional Display Engine: Hide blocks completely if left unentered */
+            .hide-on-empty:not(:has(input:not([value=""]):not([value=" "]), textarea:not(:empty))) {
+                display: none !important;
+            }
+            .hide-block-print { display: none !important; }
         }
-        input:focus, textarea:focus, select:focus { background-color: #f8fafc; }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-gray-800 font-sans pb-12">
 
-    <div class="no-print bg-slate-900 text-white sticky top-0 z-50 px-4 py-3 shadow-md">
-        <div class="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-                <span class="text-xs uppercase font-bold tracking-widest text-blue-400 bg-blue-950/50 px-2.5 py-1 rounded border border-blue-900">OPD Console</span>
-                <div class="flex items-center gap-2">
-                    <label class="text-xs text-slate-300 font-medium">Fetch Row:</label>
-                    <input type="number" id="row_num" value="5" min="2" max="500" class="w-16 bg-slate-800 border border-slate-700 rounded px-2 py-1 text-sm font-bold text-center text-white focus:outline-none focus:border-blue-500">
-                    <button type="button" id="fetchBtn" onclick="fetchPatientFromSheet()" class="bg-blue-600 hover:bg-blue-700 text-xs font-bold px-3 py-1.5 rounded transition">Fetch Record</button>
-                </div>
-            </div>
+    <div class="no-print bg-slate-900 text-white sticky top-0 z-50 px-4 py-3 shadow-md flex items-center justify-between">
+        <div class="max-w-4xl mx-auto w-full flex items-center justify-between">
+            <span class="text-xs uppercase font-black tracking-widest text-blue-400 bg-blue-950/50 px-3 py-1 rounded border border-blue-900">Manual OPD Console</span>
             <div class="flex gap-2">
-                <button type="button" onclick="setAnteriorSegmentNormal()" class="bg-emerald-700 hover:bg-emerald-600 text-xs font-bold px-3 py-1.5 rounded transition">✓ Exams Normal</button>
-                <button type="button" onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-xs font-bold px-4 py-1.5 rounded transition shadow-sm">💾 Save PDF / Print</button>
+                <button type="button" onclick="setAnteriorSegmentNormal()" class="bg-emerald-700 hover:bg-emerald-600 text-xs font-bold px-3 py-1.5 rounded transition">✓ All Exams Normal</button>
+                <button type="button" onclick="clearAllFormFields()" class="bg-slate-700 hover:bg-slate-600 text-xs font-bold px-3 py-1.5 rounded transition">⟲ Clear Board</button>
+                <button type="button" onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-xs font-bold px-4 py-1.5 rounded transition shadow-sm">💾 Print / Save PDF</button>
             </div>
         </div>
     </div>
@@ -38,186 +54,355 @@
     <main class="print-container max-w-4xl mx-auto bg-white my-6 p-8 md:p-12 shadow-sm border border-gray-200/60 rounded-xl space-y-6">
         
         <header class="flex justify-between items-start border-b-2 border-blue-900 pb-4">
-            <div>
-                <h1 class="text-3xl font-black text-blue-900 tracking-tight">SHIVOM EYE CARE</h1>
-                <p class="text-xs font-extrabold text-blue-700 uppercase tracking-widest mt-0.5">Your Eyes, Our Care</p>
-                <p class="text-[11px] text-gray-500 font-medium mt-2 max-w-md leading-relaxed">
-                    <strong>Dr. Kenshuk Marwah</strong> — MS, FICO (UK), DNB, MNAMS, FVRS, FAICO (Retina)<br>
-                    Senior Consultant Ophthalmologist | Fortis Gurgaon
-                </p>
+            <div class="flex items-center gap-4">
+                <img src="logo.png" alt="Shivom Eye Care Logo" class="h-14 w-auto object-contain" onerror="this.style.display='none'">
+                <div>
+                    <h1 class="text-3xl font-black text-blue-900 tracking-tight">SHIVOM EYE CARE</h1>
+                    <p class="text-xs font-extrabold text-blue-700 uppercase tracking-widest mt-0.5">Your Eyes, Our Care</p>
+                    <p class="text-[11px] text-gray-500 font-medium mt-1 leading-relaxed">
+                        <strong>Dr. Kenshuk Marwah</strong> — MS, FICO (UK), DNB, MNAMS, FVRS, FAICO (Retina)<br>
+                        Senior Consultant Ophthalmologist & Vitreo-Retina Specialist
+                    </p>
+                </div>
             </div>
-            <div class="text-right text-[11px] text-gray-600 space-y-0.5 font-medium">
-                <p class="font-bold text-gray-900">📍 Gurugram & Delhi Clinics</p>
-                <p>📞 GGN: 9485740077 | DLH: 7827133830</p>
+            <div class="text-right text-[10px] text-gray-600 space-y-0.5 font-medium pt-2">
+                <p class="font-bold text-gray-900">📍 Gurugram & Delhi</p>
+                <p>📞 GGN: 9485740077 / 0124-4377759</p>
+                <p>📞 DLH: 7827133830</p>
                 <p>✉ shivomeyecare@gmail.com</p>
             </div>
         </header>
 
-        <section class="bg-slate-50 border border-gray-200 rounded-xl p-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-            <div><label class="block text-gray-400 font-bold uppercase text-[10px]">Patient Name</label><input type="text" id="p_name" class="w-full bg-transparent font-bold text-gray-900 py-1 border-b border-dashed border-gray-300 focus:outline-none"></div>
-            <div><label class="block text-gray-400 font-bold uppercase text-[10px]">Age / Gender</label><input type="text" id="p_age_sex" class="w-full bg-transparent font-bold text-gray-900 py-1 border-b border-dashed border-gray-300 focus:outline-none"></div>
-            <div><label class="block text-gray-400 font-bold uppercase text-[10px]">Contact Number</label><input type="tel" id="p_phone" class="w-full bg-transparent font-bold text-gray-900 py-1 border-b border-dashed border-gray-300 focus:outline-none"></div>
-            <div><label class="block text-gray-400 font-bold uppercase text-[10px]">Date</label><input type="text" id="p_date" class="w-full bg-transparent font-bold text-gray-900 py-1 border-b border-dashed border-gray-300 focus:outline-none"></div>
-            <div class="col-span-2"><label class="block text-gray-400 font-bold uppercase text-[10px]">Presenting Complaint</label><textarea id="p_complaint" rows="1" class="w-full bg-transparent text-gray-900 py-1 border-b border-dashed border-gray-300 focus:outline-none resize-none"></textarea></div>
-            <div><label class="block text-gray-400 font-bold uppercase text-[10px]">Ocular History</label><input type="text" id="p_ocular_hx" class="w-full bg-transparent text-gray-900 py-1 border-b border-dashed border-gray-300 focus:outline-none"></div>
-            <div><label class="block text-gray-400 font-bold uppercase text-[10px]">Medical History</label><input type="text" id="p_medical_hx" class="w-full bg-transparent text-gray-900 py-1 border-b border-dashed border-gray-300 focus:outline-none"></div>
-        </section>
-
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="border border-blue-100 rounded-xl overflow-hidden shadow-sm">
-                <div class="bg-blue-900 text-white font-black px-3 py-1.5 text-xs tracking-wider uppercase flex justify-between"><span>Right Eye (OD)</span></div>
-                <div class="p-4 space-y-3 text-xs">
-                    <div class="grid grid-cols-3 gap-2">
-                        <div><label class="text-[10px] text-gray-400 font-bold">UCVA</label><input type="text" id="od_ucva" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                        <div><label class="text-[10px] text-gray-400 font-bold">BCVA</label><input type="text" id="od_bcva" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                        <div><label class="text-[10px] text-gray-400 font-bold">PH</label><input type="text" id="od_ph" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div><label class="text-[10px] text-gray-400 font-bold">Near UCVA</label><input type="text" id="od_near_ucva" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                        <div><label class="text-[10px] text-gray-400 font-bold">Near BCVA</label><input type="text" id="od_near_bcva" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 pt-1 border-t">
-                        <div><label class="text-[10px] text-gray-400 font-bold">IOP</label><input type="text" id="od_iop" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                        <div><label class="text-[10px] text-gray-400 font-bold">Colour</label><input type="text" id="od_colour" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                    </div>
+        <section class="bg-slate-50 border border-gray-200 rounded-xl p-4 space-y-4 text-xs">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px]">Patient Name</label>
+                    <input type="text" id="p_name" class="w-full bg-transparent font-bold text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px]">Age / Sex</label>
+                    <input type="text" id="p_age_sex" class="w-full bg-transparent font-bold text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px]">Contact No (WhatsApp)</label>
+                    <input type="tel" id="p_phone" class="w-full bg-transparent font-bold text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px]">Date</label>
+                    <input type="text" id="p_date" class="w-full bg-transparent font-bold text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none">
                 </div>
             </div>
 
-            <div class="border border-indigo-100 rounded-xl overflow-hidden shadow-sm">
-                <div class="bg-indigo-900 text-white font-black px-3 py-1.5 text-xs tracking-wider uppercase flex justify-between"><span>Left Eye (OS)</span></div>
-                <div class="p-4 space-y-3 text-xs">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-gray-200/60 pt-3">
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px]">Presenting Complaint</label>
+                    <textarea id="p_complaint" rows="2" placeholder="Write clinical details..." class="w-full bg-transparent text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px]">Ocular History (H/O)</label>
+                    <textarea id="p_ocular_hx" rows="2" placeholder="Prior surgeries, laser history..." class="w-full bg-transparent text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px]">Medical Hx / Allergies / Meds</label>
+                    <textarea id="p_medical_hx" rows="2" placeholder="Systemic health conditions / drug reactions..." class="w-full bg-transparent text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none resize-none"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section id="block_pgp" class="hide-on-empty border border-amber-200/80 bg-amber-50/20 rounded-xl p-4 space-y-2">
+            <div class="flex justify-between items-center border-b pb-1 no-print">
+                <h4 class="text-xs font-black text-amber-900 uppercase tracking-wider">Present Glasses Prescription (PGP)</h4>
+                <button type="button" onclick="toggleBlockVisibility('block_pgp')" class="text-[10px] bg-amber-100 hover:bg-amber-200 text-amber-800 px-2 py-0.5 rounded font-bold">✕ Hide Section</button>
+            </div>
+            <h4 class="text-xs font-black text-amber-900 uppercase tracking-wider hidden print:block">Present Glasses Prescription (PGP)</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <table class="w-full border border-amber-200 text-center">
+                    <thead>
+                        <tr class="bg-amber-50/50 text-[9px] font-bold text-amber-800 uppercase"><th class="p-1 border-b" colspan="5">PGP - Distance</th></tr>
+                        <tr class="bg-gray-50 text-[9px] font-bold text-gray-400 uppercase">
+                            <th class="p-1 border-b border-r">Eye</th><th class="p-1 border-b border-r">Sph</th><th class="p-1 border-b border-r">Cyl</th><th class="p-1 border-b border-r">Axis</th><th class="p-1 border-b">VA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="p-1 font-bold bg-gray-50 border-r border-b text-[10px]">OD</td><td class="p-1 border-r border-b"><input type="text" id="pgp_dist_od_sph" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r border-b"><input type="text" id="pgp_dist_od_cyl" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r border-b"><input type="text" id="pgp_dist_od_axis" class="w-full text-center focus:outline-none"></td><td class="p-1 border-b"><input type="text" id="pgp_dist_od_va" class="w-full text-center focus:outline-none"></td></tr>
+                        <tr><td class="p-1 font-bold bg-gray-50 border-r text-[10px]">OS</td><td class="p-1 border-r"><input type="text" id="pgp_dist_os_sph" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r"><input type="text" id="pgp_dist_os_cyl" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r"><input type="text" id="pgp_dist_os_axis" class="w-full text-center focus:outline-none"></td><td class="p-1"><input type="text" id="pgp_dist_os_va" class="w-full text-center focus:outline-none"></td></tr>
+                    </tbody>
+                </table>
+                <table class="w-full border border-amber-200 text-center">
+                    <thead>
+                        <tr class="bg-amber-50/50 text-[9px] font-bold text-amber-800 uppercase"><th class="p-1 border-b" colspan="5">PGP - Near</th></tr>
+                        <tr class="bg-gray-50 text-[9px] font-bold text-gray-400 uppercase">
+                            <th class="p-1 border-b border-r">Eye</th><th class="p-1 border-b border-r">Sph</th><th class="p-1 border-b border-r">Cyl</th><th class="p-1 border-b border-r">Axis</th><th class="p-1 border-b">VA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="p-1 font-bold bg-gray-50 border-r border-b text-[10px]">OD</td><td class="p-1 border-r border-b"><input type="text" id="pgp_near_od_sph" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r border-b"><input type="text" id="pgp_near_od_cyl" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r border-b"><input type="text" id="pgp_near_od_axis" class="w-full text-center focus:outline-none"></td><td class="p-1 border-b"><input type="text" id="pgp_near_od_va" class="w-full text-center focus:outline-none"></td></tr>
+                        <tr><td class="p-1 font-bold bg-gray-50 border-r text-[10px]">OS</td><td class="p-1 border-r"><input type="text" id="pgp_near_os_sph" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r"><input type="text" id="pgp_near_os_cyl" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r"><input type="text" id="pgp_near_os_axis" class="w-full text-center focus:outline-none"></td><td class="p-1"><input type="text" id="pgp_near_os_va" class="w-full text-center focus:outline-none"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <div id="btn_show_block_pgp" class="no-print hidden"><button type="button" onclick="toggleBlockVisibility('block_pgp')" class="text-xs bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-bold px-3 py-1 rounded">+ Add Present Glasses Prescription (PGP)</button></div>
+
+        <section class="border border-blue-900 rounded-xl overflow-hidden shadow-sm">
+            <div class="bg-blue-950 text-white font-black px-4 py-2 text-xs tracking-wider uppercase">
+                RE & LE Vision and Refraction Dashboard Acceptance Matrix
+            </div>
+            <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                
+                <div class="space-y-3">
+                    <h4 class="font-extrabold text-blue-900 border-b pb-0.5 text-[11px] uppercase tracking-wide">Right Eye (OD)</h4>
                     <div class="grid grid-cols-3 gap-2">
-                        <div><label class="text-[10px] text-gray-400 font-bold">UCVA</label><input type="text" id="os_ucva" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                        <div><label class="text-[10px] text-gray-400 font-bold">BCVA</label><input type="text" id="os_bcva" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                        <div><label class="text-[10px] text-gray-400 font-bold">PH</label><input type="text" id="os_ph" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">UCVA (Distance)</label><input type="text" id="od_ucva" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">BCVA (Distance)</label><input type="text" id="od_bcva" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">PH VA</label><input type="text" id="od_ph" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <div><label class="text-[10px] text-gray-400 font-bold">Near UCVA</label><input type="text" id="os_near_ucva" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                        <div><label class="text-[10px] text-gray-400 font-bold">Near BCVA</label><input type="text" id="os_near_bcva" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">Near UCVA</label><input type="text" id="od_near_ucva" value="N-6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">Near BCVA</label><input type="text" id="od_near_bcva" value="N-6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 pt-1 border-t">
-                        <div><label class="text-[10px] text-gray-400 font-bold">IOP</label><input type="text" id="os_iop" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
-                        <div><label class="text-[10px] text-gray-400 font-bold">Colour</label><input type="text" id="os_colour" class="w-full border border-gray-200 rounded p-1 text-center font-semibold"></div>
+                    
+                    <div class="bg-slate-50 border p-2.5 rounded-lg space-y-1.5">
+                        <span class="block text-[9px] font-black uppercase text-gray-400">Subjective Acceptance (OD)</span>
+                        <div class="grid grid-cols-4 gap-1 text-center">
+                            <div><label class="block text-[8px] font-medium text-gray-400">Sph</label><input type="text" id="sub_od_sph" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Cyl</label><input type="text" id="sub_od_cyl" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Axis</label><input type="text" id="sub_od_axis" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Add</label><input type="text" id="sub_od_add" class="w-full border text-center font-semibold bg-white rounded"></div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="space-y-3">
+                    <h4 class="font-extrabold text-blue-900 border-b pb-0.5 text-[11px] uppercase tracking-wide">Left Eye (OS)</h4>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div><label class="block text-[10px] font-bold text-gray-400">UCVA (Distance)</label><input type="text" id="os_ucva" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">BCVA (Distance)</label><input type="text" id="os_bcva" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">PH VA</label><input type="text" id="os_ph" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><label class="block text-[10px] font-bold text-gray-400">Near UCVA</label><input type="text" id="os_near_ucva" value="N-6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">Near BCVA</label><input type="text" id="os_near_bcva" value="N-6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                    </div>
+                    
+                    <div class="bg-slate-50 border p-2.5 rounded-lg space-y-1.5">
+                        <span class="block text-[9px] font-black uppercase text-gray-400">Subjective Acceptance (OS)</span>
+                        <div class="grid grid-cols-4 gap-1 text-center">
+                            <div><label class="block text-[8px] font-medium text-gray-400">Sph</label><input type="text" id="sub_os_sph" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Cyl</label><input type="text" id="sub_os_cyl" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Axis</label><input type="text" id="sub_os_axis" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Add</label><input type="text" id="sub_os_add" class="w-full border text-center font-semibold bg-white rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="block_ar" class="hide-on-empty border border-indigo-200/80 bg-indigo-50/20 rounded-xl p-4 space-y-2">
+            <div class="flex justify-between items-center border-b pb-1 no-print">
+                <h4 class="text-xs font-black text-indigo-900 uppercase tracking-wider">Objective Refraction (AR / Retinoscopy)</h4>
+                <button type="button" onclick="toggleBlockVisibility('block_ar')" class="text-[10px] bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded font-bold">✕ Hide Section</button>
+            </div>
+            <h4 class="text-xs font-black text-indigo-900 uppercase tracking-wider hidden print:block">Objective Refraction (AR / Retinoscopy)</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <table class="w-full border border-indigo-200 text-center">
+                    <thead>
+                        <tr class="bg-gray-50 text-[9px] font-bold text-gray-400 uppercase">
+                            <th class="p-1 border-b border-r">Eye</th><th class="p-1 border-b border-r">Sph</th><th class="p-1 border-b border-r">Cyl</th><th class="p-1 border-b border-r">Axis</th><th class="p-1 border-b">Add</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="p-1 font-bold bg-gray-50 border-r border-b text-[10px]">OD</td><td class="p-1 border-r border-b"><input type="text" id="ar_od_sph" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r border-b"><input type="text" id="ar_od_cyl" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r border-b"><input type="text" id="ar_od_axis" class="w-full text-center focus:outline-none"></td><td class="p-1 border-b"><input type="text" id="ar_od_add" class="w-full text-center focus:outline-none"></td></tr>
+                        <tr><td class="p-1 font-bold bg-gray-50 border-r text-[10px]">OS</td><td class="p-1 border-r"><input type="text" id="ar_os_sph" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r"><input type="text" id="ar_os_cyl" class="w-full text-center focus:outline-none"></td><td class="p-1 border-r"><input type="text" id="ar_os_axis" class="w-full text-center focus:outline-none"></td><td class="p-1"><input type="text" id="ar_os_add" class="w-full text-center focus:outline-none"></td></tr>
+                    </tbody>
+                </table>
+                <div class="flex flex-col justify-end">
+                    <label class="block text-[10px] text-gray-400 font-bold uppercase mb-1">AR Notes</label>
+                    <input type="text" id="ar_notes" placeholder="Refraction anomalies / poor reflex observations..." class="w-full border p-2 rounded">
+                </div>
+            </div>
+        </section>
+        <div id="btn_show_block_ar" class="no-print"><button type="button" onclick="toggleBlockVisibility('block_ar')" class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 font-bold px-3 py-1 rounded">+ Add Objective Refraction (AR Section)</button></div>
+
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs bg-slate-50 border border-gray-200 rounded-xl p-3">
+            <div>
+                <label class="block text-[9px] font-bold text-gray-400 uppercase">Intraocular Pressure (IOP OD)</label>
+                <input type="text" id="od_iop" value="15 mmHg" class="w-full bg-transparent font-bold text-gray-900 focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-[9px] font-bold text-gray-400 uppercase">Intraocular Pressure (IOP OS)</label>
+                <input type="text" id="os_iop" value="14 mmHg" class="w-full bg-transparent font-bold text-gray-900 focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-[9px] font-bold text-gray-400 uppercase">Colour Vision (OD)</label>
+                <input type="text" id="od_colour" value="WNL" class="w-full bg-transparent font-bold text-gray-900 focus:outline-none">
+            </div>
+            <div>
+                <label class="block text-[9px] font-bold text-gray-400 uppercase">Colour Vision (OS)</label>
+                <input type="text" id="os_colour" value="WNL" class="w-full bg-transparent font-bold text-gray-900 focus:outline-none">
             </div>
         </section>
 
         <section class="space-y-2">
-            <h3 class="text-xs font-black text-slate-900 border-b pb-1 uppercase tracking-wider">Ocular Clinical Examination</h3>
+            <h3 class="text-xs font-black text-slate-900 border-b pb-1 uppercase tracking-wider">Slit Lamp Biomicroscopy Exam Matrix</h3>
             <table class="w-full border border-gray-200 text-xs">
                 <thead>
-                    <tr class="bg-gray-50 text-[10px] text-gray-400 uppercase font-bold text-left">
+                    <tr class="bg-gray-50 text-[9px] text-gray-400 uppercase font-bold text-left">
                         <th class="p-2 border-r border-b w-1/4">Anatomical Segment</th>
                         <th class="p-2 border-r border-b w-3/8">Right Eye (OD)</th>
                         <th class="p-2 border-b w-3/8">Left Eye (OS)</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
+                    <tr><td class="p-2 font-bold bg-gray-50/50 border-r">Lids & Adnexa</td><td class="p-1 border-r"><input type="text" id="exam_od_lids" class="w-full px-1 focus:outline-none"></td><td class="p-1"><input type="text" id="exam_os_lids" class="w-full px-1 focus:outline-none"></td></tr>
                     <tr><td class="p-2 font-bold bg-gray-50/50 border-r">Conjunctiva</td><td class="p-1 border-r"><input type="text" id="exam_od_conj" class="w-full px-1 focus:outline-none"></td><td class="p-1"><input type="text" id="exam_os_conj" class="w-full px-1 focus:outline-none"></td></tr>
+                    <tr><td class="p-2 font-bold bg-gray-50/50 border-r">Sclera</td><td class="p-1 border-r"><input type="text" id="exam_od_sclera" class="w-full px-1 focus:outline-none"></td><td class="p-1"><input type="text" id="exam_os_sclera" class="w-full px-1 focus:outline-none"></td></tr>
                     <tr><td class="p-2 font-bold bg-gray-50/50 border-r">Cornea</td><td class="p-1 border-r"><input type="text" id="exam_od_cornea" class="w-full px-1 focus:outline-none"></td><td class="p-1"><input type="text" id="exam_os_cornea" class="w-full px-1 focus:outline-none"></td></tr>
-                    <tr><td class="p-2 font-bold bg-gray-50/50 border-r text-blue-900">Fundus Exam</td><td class="p-1 border-r"><textarea id="exam_od_fundus" rows="1" class="w-full px-1 focus:outline-none resize-none"></textarea></td><td class="p-1"><textarea id="exam_os_fundus" rows="1" class="w-full px-1 focus:outline-none resize-none"></textarea></td></tr>
+                    <tr><td class="p-2 font-bold bg-gray-50/50 border-r">Ant. Chamber</td><td class="p-1 border-r"><input type="text" id="exam_od_ac" class="w-full px-1 focus:outline-none"></td><td class="p-1"><input type="text" id="exam_os_ac" class="w-full px-1 focus:outline-none"></td></tr>
+                    <tr><td class="p-2 font-bold bg-gray-50/50 border-r">Iris / Pupil</td><td class="p-1 border-r"><input type="text" id="exam_od_iris" class="w-full px-1 focus:outline-none"></td><td class="p-1"><input type="text" id="exam_os_iris" class="w-full px-1 focus:outline-none"></td></tr>
+                    <tr><td class="p-2 font-bold bg-gray-50/50 border-r">Lens</td><td class="p-1 border-r"><input type="text" id="exam_od_lens" class="w-full px-1 focus:outline-none"></td><td class="p-1"><input type="text" id="exam_os_lens" class="w-full px-1 focus:outline-none"></td></tr>
+                    <tr><td class="p-2 font-bold bg-gray-50/50 border-r text-blue-900">Fundus Examination</td><td class="p-1 border-r"><textarea id="exam_od_fundus" rows="1" class="w-full px-1 focus:outline-none resize-none"></textarea></td><td class="p-1"><textarea id="exam_os_fundus" rows="1" class="w-full px-1 focus:outline-none resize-none"></textarea></td></tr>
                 </tbody>
             </table>
-            <div class="flex items-center gap-2 text-xs pt-2">
-                <label class="font-bold text-gray-500 uppercase text-[10px]">Schirmer's Test:</label>
-                <input type="text" id="test_schirmer" class="w-full max-w-xs bg-transparent border-b py-0.5 focus:outline-none">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-xs">
+                <div class="flex items-center gap-2">
+                    <label class="font-bold text-gray-500 uppercase text-[9px] whitespace-nowrap">Schirmer's Test:</label>
+                    <input type="text" id="test_schirmer" value="10 mm BOTH EYES" class="w-full bg-transparent border-b py-0.5 focus:outline-none">
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="font-bold text-gray-500 uppercase text-[9px] whitespace-nowrap">Other Specialized Tests:</label>
+                    <input type="text" id="test_others" placeholder="TBUT, Corneal Topography results..." class="w-full bg-transparent border-b py-0.5 focus:outline-none">
+                </div>
             </div>
         </section>
 
         <section class="border-t pt-4 grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-            <div>
-                <label class="block text-gray-400 font-bold uppercase text-[10px] mb-1">Clinical Diagnosis</label>
-                <textarea id="plan_diagnosis" rows="2" class="w-full border rounded-xl p-2.5 font-bold text-gray-900 bg-slate-50/40 focus:bg-white focus:outline-none"></textarea>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px] mb-1">Diagnosis</label>
+                    <textarea id="plan_diagnosis" rows="2" class="w-full border rounded-xl p-2.5 font-bold text-gray-900 bg-slate-50/40 focus:bg-white focus:outline-none" placeholder="Clinical assessment summary details..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px] mb-1">Investigations Advice</label>
+                    <input type="text" id="plan_investigations" class="w-full border rounded-xl p-2 bg-slate-50/40 focus:bg-white focus:outline-none" placeholder="OCT Retina, Visual Fields, Pachymetry...">
+                </div>
             </div>
-            <div>
-                <label class="block text-gray-400 font-bold uppercase text-[10px] mb-1">Management & Rx Plan</label>
-                <textarea id="plan_management" rows="2" class="w-full border rounded-xl p-2.5 text-gray-900 bg-slate-50/40 focus:bg-white focus:outline-none"></textarea>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-400 font-bold uppercase text-[9px] mb-1">Management & Rx Routine</label>
+                    <textarea id="plan_management" rows="2" class="w-full border rounded-xl p-2.5 text-gray-900 bg-slate-50/40 focus:bg-white focus:outline-none" placeholder="Prescriptions, eye drops, tapering dosages schedules..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-gray-400 font-bold uppercase text-[9px] mb-1">Next Follow-up Advice</label>
+                        <input type="text" id="plan_followup" class="w-full border rounded-xl p-2 bg-slate-50/40 focus:bg-white focus:outline-none" placeholder="e.g., 1 week later">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 font-bold uppercase text-[9px] mb-1">Past Rx / Reference</label>
+                        <input type="text" id="plan_past_rx" class="w-full border rounded-xl p-2 bg-slate-50/40 focus:bg-white focus:outline-none" placeholder="e.g., 28/03/2026">
+                    </div>
+                </div>
             </div>
         </section>
 
-        <footer class="border-t border-gray-100 pt-6 flex justify-between items-end text-[10px] text-gray-400 font-medium">
-            <div><p class="font-bold text-gray-500 text-xs">Shivom Eye Care</p></div>
-            <div><p class="italic text-gray-300">Not for Medicolegal Purposes</p></div>
+        <footer class="border-t border-gray-200 pt-6 flex justify-between items-center text-[10px] text-gray-400 font-medium">
+            <div class="flex items-center gap-3">
+                <img src="logo.png" alt="Logo" class="h-8 w-auto opacity-70" onerror="this.style.display='none'">
+                <div>
+                    <p class="font-extrabold text-gray-500 text-xs">Shivom Eye Care</p>
+                    <p>Gurugram: B-80, B Block, Mayfield Garden, Sector 50, 122018 | Delhi: Kalkaji</p>
+                    <p class="text-[9px] text-blue-500 font-semibold">✉ shivomeyecare@gmail.com</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="italic text-gray-300 tracking-wider">Not for Medicolegal Purpose</p>
+            </div>
         </footer>
     </main>
 
     <script>
-        // Replace this link with your exact copied deployment Web App URL from Step 2
-        const GOOGLE_API_ENDPOINT = "YOUR_DEPLOYED_WEB_APP_URL_HERE";
-
-        async function fetchPatientFromSheet() {
-            const rowNum = document.getElementById('row_num').value;
-            const fetchBtn = document.getElementById('fetchBtn');
+        /**
+         * Dynamic block structural visibility layout manager
+         */
+        function toggleBlockVisibility(blockId) {
+            const block = document.getElementById(blockId);
+            const btnContainer = document.getElementById('btn_show_' + blockId);
             
-            if(!rowNum) return alert("Please enter a valid sheet row number.");
-            
-            fetchBtn.innerText = "Fetching...";
-            fetchBtn.disabled = true;
-
-            try {
-                const response = await fetch(`${GOOGLE_API_ENDPOINT}?row=${rowNum}`);
-                const data = await response.json();
-
-                if(data.status === "success") {
-                    // Map Core Demographics
-                    document.getElementById('p_name').value = data.patient_name;
-                    document.getElementById('p_age_sex').value = data.age_sex;
-                    document.getElementById('p_phone').value = data.phone;
-                    document.getElementById('p_date').value = data.date;
-                    document.getElementById('p_complaint').value = data.complaint;
-                    document.getElementById('p_ocular_hx').value = data.ocular_hx;
-                    document.getElementById('p_medical_hx').value = data.medical_hx;
-
-                    // Map Diagnostics Block
-                    document.getElementById('od_ucva').value = data.od_ucva;
-                    document.getElementById('od_bcva').value = data.od_bcva;
-                    document.getElementById('od_ph').value = data.od_ph;
-                    document.getElementById('od_near_ucva').value = data.od_near_ucva;
-                    document.getElementById('od_near_bcva').value = data.od_near_bcva;
-                    document.getElementById('od_iop').value = data.od_iop;
-                    document.getElementById('od_colour').value = data.od_colour;
-
-                    document.getElementById('os_ucva').value = data.os_ucva;
-                    document.getElementById('os_bcva').value = data.os_bcva;
-                    document.getElementById('os_ph').value = data.os_ph;
-                    document.getElementById('os_near_ucva').value = data.os_near_ucva;
-                    document.getElementById('os_near_bcva').value = data.os_near_bcva;
-                    document.getElementById('os_iop').value = data.os_iop;
-                    document.getElementById('os_colour').value = data.os_colour;
-
-                    // Map Slit Lamp Findings
-                    document.getElementById('exam_od_conj').value = data.exam_od_conj;
-                    document.getElementById('exam_os_conj').value = data.exam_os_conj;
-                    document.getElementById('exam_od_cornea').value = data.exam_od_cornea;
-                    document.getElementById('exam_os_cornea').value = data.exam_os_cornea;
-                    document.getElementById('exam_od_fundus').value = data.exam_od_fundus;
-                    document.getElementById('exam_os_fundus').value = data.exam_os_fundus;
-                    document.getElementById('test_schirmer').value = data.test_schirmer;
-
-                    // Plan Strategy Lines
-                    document.getElementById('plan_diagnosis').value = data.plan_diagnosis;
-                    document.getElementById('plan_management').value = data.plan_management;
-                } else {
-                    alert("Error reading record: " + data.message);
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Could not communicate with data endpoint pipeline.");
-            } finally {
-                fetchBtn.innerText = "Fetch Record";
-                fetchBtn.disabled = false;
+            if(block.classList.contains('hide-block-print')) {
+                block.classList.remove('hide-block-print');
+                btnContainer.classList.add('hidden');
+            } else {
+                block.classList.add('hide-block-print');
+                btnContainer.classList.remove('hidden');
+                
+                // Reset child input fields instantly to guarantee omission from print engine pipelines
+                block.querySelectorAll('input, textarea').forEach(el => el.value = "");
             }
         }
 
+        /**
+         * Quick automated diagnostic baseline values loader macro
+         */
         function setAnteriorSegmentNormal() {
+            document.getElementById("exam_od_lids").value = "Normal";
+            document.getElementById("exam_os_lids").value = "Normal";
             document.getElementById("exam_od_conj").value = "Normal";
             document.getElementById("exam_os_conj").value = "Normal";
+            document.getElementById("exam_od_sclera").value = "Normal";
+            document.getElementById("exam_os_sclera").value = "Normal";
             document.getElementById("exam_od_cornea").value = "Clear";
             document.getElementById("exam_os_cornea").value = "Clear";
+            document.getElementById("exam_od_ac").value = "Normal";
+            document.getElementById("exam_os_ac").value = "Normal";
+            document.getElementById("exam_od_iris").value = "RRRR";
+            document.getElementById("exam_os_iris").value = "RRRR";
+            document.getElementById("exam_od_lens").value = "Clear";
+            document.getElementById("exam_os_lens").value = "Clear";
             document.getElementById("exam_od_fundus").value = "CDR 0.4, disc healthy, Macula WNL";
             document.getElementById("exam_os_fundus").value = "CDR 0.4, disc healthy, Macula WNL";
         }
+
+        /**
+         * Interactive board reset protocol engine
+         */
+        function clearAllFormFields() {
+            if(confirm("Are you sure you want to completely clear the current case sheet fields?")) {
+                document.querySelectorAll('input, textarea').forEach(el => {
+                    // Do not clean default structural placeholder values or standard date indices
+                    if(el.id !== 'p_date') el.value = "";
+                });
+                
+                // Pre-populate standard defaults
+                document.getElementById('od_ucva').value = "6/6";
+                document.getElementById('od_bcva').value = "6/6";
+                document.getElementById('od_ph').value = "6/6";
+                document.getElementById('os_ucva').value = "6/6";
+                document.getElementById('os_bcva').value = "6/6";
+                document.getElementById('os_ph').value = "6/6";
+                document.getElementById('od_near_ucva').value = "N-6";
+                document.getElementById('od_near_bcva').value = "N-6";
+                document.getElementById('os_near_ucva').value = "N-6";
+                document.getElementById('os_near_bcva').value = "N-6";
+                document.getElementById('od_iop').value = "15 mmHg";
+                document.getElementById('os_iop').value = "14 mmHg";
+                document.getElementById('od_colour').value = "WNL";
+                document.getElementById('os_colour').value = "WNL";
+                document.getElementById('test_schirmer').value = "10 mm BOTH EYES";
+            }
+        }
+
+        // Auto-assign local system time metrics on initial session boot
+        window.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            document.getElementById('p_date').value = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
+            
+            // Set AR and PGP to hide by default to keep clean canvas layout state
+            document.getElementById('block_pgp').classList.add('hide-block-print');
+            document.getElementById('btn_show_block_pgp').classList.remove('hidden');
+            document.getElementById('block_ar').classList.add('hide-block-print');
+            document.getElementById('btn_show_block_ar').classList.remove('hidden');
+        });
     </script>
 </body>
 </html>
