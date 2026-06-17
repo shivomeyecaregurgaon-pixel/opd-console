@@ -27,7 +27,6 @@
             }
             textarea { resize: none; }
             
-            /* Universal print rule targeting checkboxes across clinical modules */
             .hide-test-print { display: none !important; }
             .hide-asterisk-print { display: none !important; }
         }
@@ -80,11 +79,11 @@
                 </div>
                 <div>
                     <label class="block text-gray-400 font-bold uppercase text-[9px]">Age / Sex <span class="hide-asterisk-print text-red-500 font-bold">*</span></label>
-                    <input type="text" id="p_age_sex" placeholder="e.g., 35/F" class="w-full bg-transparent font-bold text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none focus:border-blue-500">
+                    <input type="text" id="p_age_sex" placeholder="e.g., 25/F or 5/M" onblur="formatAgeSex(this)" class="w-full bg-transparent font-bold text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
                     <label class="block text-gray-400 font-bold uppercase text-[9px]">Contact No <span class="hide-asterisk-print text-red-500 font-bold">*</span></label>
-                    <input type="tel" id="p_phone" class="w-full bg-transparent font-bold text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none focus:border-blue-500">
+                    <input type="tel" id="p_phone" placeholder="10-digit number" class="w-full bg-transparent font-bold text-gray-900 py-0.5 border-b border-dashed border-gray-300 focus:outline-none focus:border-blue-500">
                 </div>
                 <div>
                     <label class="block text-gray-400 font-bold uppercase text-[9px]">Date</label>
@@ -133,23 +132,23 @@
                         <tbody>
                             <tr>
                                 <td class="p-1.5 font-bold bg-gray-50 border-r border-b text-[10px]">RE (DV)</td>
-                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_sph" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_cyl" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_axis" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-b"><input type="text" id="pgp_dv_re_va" class="w-full text-center focus:outline-none"></td>
+                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_cyl" onblur="formatDiopter(this); verifyAxisRequirement('pgp_dv_re_cyl', 'pgp_dv_re_axis')" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_axis" onblur="formatAxis(this)" placeholder="—" class="w-full text-center focus:outline-none"></td>
+                                <td class="p-1.5 border-b"><input type="text" id="pgp_dv_re_va" onblur="formatVisualAcuity(this)" placeholder="6/6" class="w-full text-center focus:outline-none"></td>
                             </tr>
                             <tr>
                                 <td class="p-1.5 font-bold bg-gray-50 border-r text-[10px]">LE (DV)</td>
-                                <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_sph" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_cyl" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_axis" class="w-full text-center focus:outline-none"></td>
-                                <td><input type="text" id="pgp_dv_le_va" class="w-full text-center focus:outline-none"></td>
+                                <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                                <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_cyl" onblur="formatDiopter(this); verifyAxisRequirement('pgp_dv_le_cyl', 'pgp_dv_le_axis')" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                                <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_axis" onblur="formatAxis(this)" placeholder="—" class="w-full text-center focus:outline-none"></td>
+                                <td><input type="text" id="pgp_dv_le_va" onblur="formatVisualAcuity(this)" placeholder="6/6" class="w-full text-center focus:outline-none"></td>
                             </tr>
                         </tbody>
                     </table>
                     <div class="flex items-center gap-1 text-[11px] pt-1 font-medium">
                         <span>ADD:</span>
-                        <input type="text" id="pgp_add_ou" placeholder="_____________" class="w-24 text-center border-b border-dashed focus:outline-none font-bold text-gray-900">
+                        <input type="text" id="pgp_add_ou" onblur="formatAddPower(this)" placeholder="+1.00" class="w-24 text-center border-b border-dashed focus:outline-none font-bold text-gray-900">
                         <span class="font-bold">OU</span>
                     </div>
                 </div>
@@ -167,12 +166,12 @@
                             <tr>
                                 <td class="p-1.5 font-bold bg-gray-50 border-r border-b text-[10px]">RE (NV)</td>
                                 <td class="p-1.5 border-r border-b"><input type="text" id="pgp_nv_re_near" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-b"><input type="text" id="pgp_nv_re_nva" class="w-full text-center focus:outline-none"></td>
+                                <td class="p-1.5 border-b"><input type="text" id="pgp_nv_re_nva" placeholder="N-6" class="w-full text-center focus:outline-none"></td>
                             </tr>
                             <tr>
                                 <td class="p-1.5 font-bold bg-gray-50 border-r text-[10px]">LE (NV)</td>
                                 <td class="p-1.5 border-r"><input type="text" id="pgp_nv_le_near" class="w-full text-center focus:outline-none"></td>
-                                <td><input type="text" id="pgp_nv_le_nva" class="w-full text-center focus:outline-none"></td>
+                                <td><input type="text" id="pgp_nv_le_nva" placeholder="N-6" class="w-full text-center focus:outline-none"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -198,9 +197,9 @@
                 <div class="space-y-3">
                     <h4 class="font-extrabold text-blue-900 border-b pb-0.5 text-[11px] uppercase tracking-wide">Right Eye (OD)</h4>
                     <div class="grid grid-cols-3 gap-2">
-                        <div><label class="block text-[10px] font-bold text-gray-400">UCVA (Distance)</label><input type="text" id="od_ucva" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
-                        <div><label class="block text-[10px] font-bold text-gray-400">BCVA (Distance)</label><input type="text" id="od_bcva" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
-                        <div><label class="block text-[10px] font-bold text-gray-400">PH VA</label><input type="text" id="od_ph" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">UCVA (Distance)</label><input type="text" id="od_ucva" value="6/6" onblur="formatVisualAcuity(this)" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">BCVA (Distance)</label><input type="text" id="od_bcva" value="6/6" onblur="formatVisualAcuity(this)" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">PH VA</label><input type="text" id="od_ph" value="6/6" onblur="formatVisualAcuity(this)" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div><label class="block text-[10px] font-bold text-gray-400">Near UCVA</label><input type="text" id="od_near_ucva" value="N-6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
@@ -210,10 +209,10 @@
                     <div class="bg-slate-50 border p-2.5 rounded-lg space-y-1.5">
                         <span class="block text-[9px] font-black uppercase text-gray-400">Subjective Acceptance (OD)</span>
                         <div class="grid grid-cols-4 gap-1 text-center">
-                            <div><label class="block text-[8px] font-medium text-gray-400">Sph</label><input type="text" id="sub_od_sph" class="w-full border text-center font-semibold bg-white rounded"></div>
-                            <div><label class="block text-[8px] font-medium text-gray-400">Cyl</label><input type="text" id="sub_od_cyl" class="w-full border text-center font-semibold bg-white rounded"></div>
-                            <div><label class="block text-[8px] font-medium text-gray-400">Axis</label><input type="text" id="sub_od_axis" class="w-full border text-center font-semibold bg-white rounded"></div>
-                            <div><label class="block text-[8px] font-medium text-gray-400">Add</label><input type="text" id="sub_od_add" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Sph</label><input type="text" id="sub_od_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Cyl</label><input type="text" id="sub_od_cyl" onblur="formatDiopter(this); verifyAxisRequirement('sub_od_cyl', 'sub_od_axis')" placeholder="0.00" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Axis</label><input type="text" id="sub_od_axis" onblur="formatAxis(this)" placeholder="—" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Add</label><input type="text" id="sub_od_add" onblur="formatAddPower(this)" placeholder="+1.00" class="w-full border text-center font-semibold bg-white rounded"></div>
                         </div>
                     </div>
                 </div>
@@ -222,9 +221,9 @@
                 <div class="space-y-3">
                     <h4 class="font-extrabold text-blue-900 border-b pb-0.5 text-[11px] uppercase tracking-wide">Left Eye (OS)</h4>
                     <div class="grid grid-cols-3 gap-2">
-                        <div><label class="block text-[10px] font-bold text-gray-400">UCVA (Distance)</label><input type="text" id="os_ucva" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
-                        <div><label class="block text-[10px] font-bold text-gray-400">BCVA (Distance)</label><input type="text" id="os_bcva" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
-                        <div><label class="block text-[10px] font-bold text-gray-400">PH VA</label><input type="text" id="os_ph" value="6/6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">UCVA (Distance)</label><input type="text" id="os_ucva" value="6/6" onblur="formatVisualAcuity(this)" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">BCVA (Distance)</label><input type="text" id="os_bcva" value="6/6" onblur="formatVisualAcuity(this)" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
+                        <div><label class="block text-[10px] font-bold text-gray-400">PH VA</label><input type="text" id="os_ph" value="6/6" onblur="formatVisualAcuity(this)" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div><label class="block text-[10px] font-bold text-gray-400">Near UCVA</label><input type="text" id="os_near_ucva" value="N-6" class="w-full border p-1 text-center font-bold text-gray-900 rounded"></div>
@@ -234,10 +233,10 @@
                     <div class="bg-slate-50 border p-2.5 rounded-lg space-y-1.5">
                         <span class="block text-[9px] font-black uppercase text-gray-400">Subjective Acceptance (OS)</span>
                         <div class="grid grid-cols-4 gap-1 text-center">
-                            <div><label class="block text-[8px] font-medium text-gray-400">Sph</label><input type="text" id="sub_os_sph" class="w-full border text-center font-semibold bg-white rounded"></div>
-                            <div><label class="block text-[8px] font-medium text-gray-400">Cyl</label><input type="text" id="sub_os_cyl" class="w-full border text-center font-semibold bg-white rounded"></div>
-                            <div><label class="block text-[8px] font-medium text-gray-400">Axis</label><input type="text" id="sub_os_axis" class="w-full border text-center font-semibold bg-white rounded"></div>
-                            <div><label class="block text-[8px] font-medium text-gray-400">Add</label><input type="text" id="sub_os_add" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Sph</label><input type="text" id="sub_os_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Cyl</label><input type="text" id="sub_os_cyl" onblur="formatDiopter(this); verifyAxisRequirement('sub_os_cyl', 'sub_os_axis')" placeholder="0.00" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Axis</label><input type="text" id="sub_os_axis" onblur="formatAxis(this)" placeholder="—" class="w-full border text-center font-semibold bg-white rounded"></div>
+                            <div><label class="block text-[8px] font-medium text-gray-400">Add</label><input type="text" id="sub_os_add" onblur="formatAddPower(this)" placeholder="+1.00" class="w-full border text-center font-semibold bg-white rounded"></div>
                         </div>
                     </div>
                 </div>
@@ -267,24 +266,24 @@
                     <tbody>
                         <tr>
                             <td class="p-1.5 font-bold bg-gray-50 border-r border-b text-[10px]">OD</td>
-                            <td class="p-1.5 border-r border-b"><input type="text" id="ar_od_sph" class="w-full text-center focus:outline-none"></td>
-                            <td class="p-1.5 border-r border-b"><input type="text" id="ar_od_cyl" class="w-full text-center focus:outline-none"></td>
-                            <td class="p-1.5 border-r border-b"><input type="text" id="ar_od_axis" class="w-full text-center focus:outline-none"></td>
-                            <td class="p-1.5 border-b"><input type="text" id="ar_od_add" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r border-b"><input type="text" id="ar_od_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r border-b"><input type="text" id="ar_od_cyl" onblur="formatDiopter(this); verifyAxisRequirement('ar_od_cyl', 'ar_od_axis')" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r border-b"><input type="text" id="ar_od_axis" onblur="formatAxis(this)" placeholder="—" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-b"><input type="text" id="ar_od_add" onblur="formatAddPower(this)" placeholder="+1.00" class="w-full text-center focus:outline-none"></td>
                         </tr>
                         <tr>
                             <td class="p-1.5 font-bold bg-gray-50 border-r text-[10px]">OS</td>
-                            <td class="p-1.5 border-r"><input type="text" id="ar_os_sph" class="w-full text-center focus:outline-none"></td>
-                            <td class="p-1.5 border-r"><input type="text" id="ar_os_cyl" class="w-full text-center focus:outline-none"></td>
-                            <td class="p-1.5 border-r"><input type="text" id="ar_os_axis" class="w-full text-center focus:outline-none"></td>
-                            <td><input type="text" id="ar_os_add" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r"><input type="text" id="ar_os_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r"><input type="text" id="ar_os_cyl" onblur="formatDiopter(this); verifyAxisRequirement('ar_os_cyl', 'ar_os_axis')" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r"><input type="text" id="ar_os_axis" onblur="formatAxis(this)" placeholder="—" class="w-full text-center focus:outline-none"></td>
+                            <td><input type="text" id="ar_os_add" onblur="formatAddPower(this)" placeholder="+1.00" class="w-full text-center focus:outline-none"></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Systemic Ocular Diagnostics Matrix (Colour Vision Optional Integration) -->
+        <!-- Systemic Ocular Diagnostics Matrix -->
         <section id="row_colour_test" class="grid grid-cols-2 gap-4 text-xs bg-slate-50 border border-gray-200 rounded-xl p-3">
             <div class="col-span-2 flex items-center justify-between no-print border-b pb-1 mb-1">
                 <span class="text-gray-400 font-bold uppercase text-[9px]">Colour Vision Testing Parameters</span>
@@ -424,7 +423,7 @@
 
     <script>
         /**
-         * Validates mandatory demographic fields before opening system print layout.
+         * Enforces strict demographics requirements (including exactly 10-digit phone checking)
          */
         function validateAndPrint() {
             const name = document.getElementById('p_name').value.trim();
@@ -435,12 +434,102 @@
                 alert("Validation Failure: Patient Name, Age/Sex, and Contact Number are mandatory fields.");
                 return;
             }
+
+            // Numeric matching validation filter engine
+            const digitsOnly = phone.replace(/\D/g, '');
+            if (digitsOnly.length !== 10) {
+                alert("Validation Failure: Contact Number must be an exact 10-digit structural string.");
+                return;
+            }
+
             window.print();
         }
 
         /**
-         * Generic visibility toggler mapped directly to the universal checkbox engine.
+         * Automated Age/Sex Normalizer Engine
          */
+        function formatAgeSex(input) {
+            let val = input.value.trim().toUpperCase();
+            if (!val) return;
+            // Snaps numbers and characters neatly into standard notation (e.g., 35 / F -> 35/F)
+            val = val.replace(/\s*\/\s*/g, '/');
+            input.value = val;
+        }
+
+        /**
+         * Formats numeric parameters cleanly to standard clinical diopter notation (+/- X.XX)
+         */
+        function formatDiopter(input) {
+            let val = input.value.trim();
+            if (!val || val === "—" || val === "0") {
+                if(val === "0") input.value = "0.00";
+                return;
+            }
+            
+            // Extract baseline sign parameters
+            let hasMinus = val.startsWith('-');
+            let cleanNum = val.replace(/[+-]/g, '').trim();
+            let parsed = parseFloat(cleanNum);
+            
+            if (isNaN(parsed)) return;
+            
+            let formatted = parsed.toFixed(2);
+            input.value = hasMinus ? `-${formatted}` : `+${formatted}`;
+        }
+
+        /**
+         * Specific formatting wrapper enforcing a forced leading (+) signature to Add powers
+         */
+        function formatAddPower(input) {
+            let val = input.value.trim();
+            if (!val) return;
+            let cleanNum = val.replace(/[+-]/g, '').trim();
+            let parsed = parseFloat(cleanNum);
+            if (!isNaN(parsed)) {
+                input.value = `+${parsed.toFixed(2)}`;
+            }
+        }
+
+        /**
+         * Automatically verifies and alerts if an entered Cylinder lacks a specified Axis value
+         */
+        function verifyAxisRequirement(cylId, axisId) {
+            const cylVal = document.getElementById(cylId).value.trim();
+            const axisInput = document.getElementById(axisId);
+            if (cylVal && cylVal !== "0.00" && !axisInput.value.trim()) {
+                axisInput.style.backgroundColor = "#fef2f2";
+                axisInput.placeholder = "REQ!";
+            } else {
+                axisInput.style.backgroundColor = "";
+            }
+        }
+
+        /**
+         * Formats pure numeric degrees by automatically appending the degree symbol inline
+         */
+        function formatAxis(input) {
+            let val = input.value.trim();
+            if (!val) return;
+            let cleanNum = val.replace(/[^0-9]/g, '');
+            if (cleanNum) {
+                input.value = `${cleanNum}°`;
+            }
+        }
+
+        /**
+         * Formats structural visual acuity parameters safely (accepts standard fractions or FC notation)
+         */
+        function formatVisualAcuity(input) {
+            let val = input.value.trim();
+            if (!val) return;
+            let upper = val.toUpperCase();
+            if (upper.startsWith("FC") || upper.includes("FC")) {
+                input.value = upper.replace(/\s+/g, ' ');
+            } else if (/^\d+\/\d+$/.test(val)) {
+                input.value = val;
+            }
+        }
+
         function toggleBoxPrintVisibility(blockId, checkboxElement) {
             const container = document.getElementById(blockId);
             if (checkboxElement.checked) {
@@ -466,6 +555,7 @@
             if(confirm("Are you sure you want to clear the current board data?")) {
                 document.querySelectorAll('input, textarea').forEach(el => {
                     if(el.id !== 'p_date') el.value = "";
+                    el.style.backgroundColor = "";
                 });
                 
                 document.getElementById('od_ucva').value = "6/6";         document.getElementById('os_ucva').value = "6/6";
@@ -477,7 +567,6 @@
                 document.getElementById('od_colour').value = "WNL";        document.getElementById('os_colour').value = "WNL";
                 document.getElementById('test_schirmer').value = "10 mm BOTH EYES";
                 
-                // Clear state checkbox synchronization reset
                 const checkboxes = ['chk_print_pgp', 'chk_print_clinical', 'chk_print_ar', 'chk_print_colour', 'chk_print_slit', 'chk_print_schirmer', 'chk_print_others', 'chk_print_plan'];
                 checkboxes.forEach(id => {
                     const cb = document.getElementById(id);
