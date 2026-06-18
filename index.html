@@ -37,10 +37,12 @@
             textarea { resize: none; min-height: 22px !important; line-height: 1.2 !important; }
             
             /* Squeezes internal padded components dynamically while preserving font size scale */
+            .p-3 { padding: 0.35rem !important; }
             .p-4 { padding: 0.5rem !important; }
             .p-6 { padding: 0.5rem !important; }
             .p-10 { padding: 0px !important; }
             .space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.5rem !important; }
+            .gap-4 { gap: 0.5rem !important; }
             .gap-6 { gap: 0.75rem !important; }
             
             .hide-test-print { display: none !important; }
@@ -118,81 +120,6 @@
             </div>
         </section>
 
-        <section id="block_pgp" class="border border-amber-200 bg-amber-50/5 rounded-xl p-3 space-y-2">
-            <div class="flex justify-between items-center border-b border-amber-100 pb-0.5 no-print">
-                <h4 class="text-[11px] font-black text-amber-950 uppercase tracking-wider">PRESENT GLASSES PRESCRIPTION (PGP)</h4>
-                <label class="flex items-center gap-1 text-[9px] text-amber-900 font-bold cursor-pointer bg-amber-100/60 px-1.5 py-0.5 rounded">
-                    <input type="checkbox" id="chk_print_pgp" checked onchange="toggleBoxPrintVisibility('block_pgp', this)"> Include in Print/PDF
-                </label>
-            </div>
-            <h4 class="text-[12px] font-black text-amber-950 uppercase tracking-wider hidden print:block">PRESENT GLASSES PRESCRIPTION (PGP)</h4>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs md:text-sm">
-                <div class="space-y-1.5">
-                    <table class="w-full border border-amber-200 text-center">
-                        <thead>
-                            <tr class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase">
-                                <th class="p-1 border-b border-r w-1/5">DV</th>
-                                <th class="p-1 border-b border-r w-1/5">SPH</th>
-                                <th class="p-1 border-b border-r w-1/5">CYL</th>
-                                <th class="p-1 border-b border-r w-1/5">AXIS</th>
-                                <th class="p-1 border-b w-1/5">VA</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="p-1.5 font-bold bg-gray-50 border-r border-b text-[11px]">RE (DV)</td>
-                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_cyl" onblur="formatDiopter(this); verifyAxisRequirement('pgp_dv_re_cyl', 'pgp_dv_re_axis')" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_axis" onblur="formatAxis(this)" placeholder="—" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-b"><input type="text" id="pgp_dv_re_va" onblur="formatVisualAcuity(this)" placeholder="6/6" class="w-full text-center focus:outline-none"></td>
-                            </tr>
-                            <tr>
-                                <td class="p-1.5 font-bold bg-gray-50 border-r text-[11px]">LE (DV)</td>
-                                <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_cyl" onblur="formatDiopter(this); verifyAxisRequirement('pgp_dv_le_cyl', 'pgp_dv_le_axis')" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_axis" onblur="formatAxis(this)" placeholder="—" class="w-full text-center focus:outline-none"></td>
-                                <td><input type="text" id="pgp_dv_le_va" onblur="formatVisualAcuity(this)" placeholder="6/6" class="w-full text-center focus:outline-none"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="flex items-center gap-1 text-[11px] font-semibold">
-                        <span>ADD:</span>
-                        <input type="text" id="pgp_add_ou" onblur="formatAddPower(this)" placeholder="+1.00" class="w-20 text-center border-b border-dashed focus:outline-none font-extrabold text-gray-900">
-                        <span class="font-bold">OU</span>
-                    </div>
-                </div>
-
-                <div class="space-y-1.5 flex flex-col justify-between">
-                    <table class="w-full border border-amber-200 text-center">
-                        <thead>
-                            <tr class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase">
-                                <th class="p-1 border-b border-r w-1/3">NV</th>
-                                <th class="p-1 border-b border-r w-1/3">NEAR</th>
-                                <th class="p-1 border-b w-1/3">NVA</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="p-1.5 font-bold bg-gray-50 border-r border-b text-[11px]">RE (NV)</td>
-                                <td class="p-1.5 border-r border-b"><input type="text" id="pgp_nv_re_near" class="w-full text-center focus:outline-none"></td>
-                                <td class="p-1.5 border-b"><input type="text" id="pgp_nv_re_nva" placeholder="N-6" class="w-full text-center focus:outline-none"></td>
-                            </tr>
-                            <tr>
-                                <td class="p-1.5 font-bold bg-gray-50 border-r text-[11px]">LE (NV)</td>
-                                <td class="p-1.5 border-r"><input type="text" id="pgp_nv_le_near" class="w-full text-center focus:outline-none"></td>
-                                <td><input type="text" id="pgp_nv_le_nva" placeholder="N-6" class="w-full text-center focus:outline-none"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="flex items-center gap-1 text-[11px] font-semibold">
-                        <span>Lens Type:</span>
-                        <input type="text" id="pgp_lens_type" placeholder="Progressive, Bifocal..." class="w-full border-b border-dashed focus:outline-none font-extrabold text-gray-900">
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section id="block_clinical_exam" class="border border-blue-900 rounded-xl overflow-hidden shadow-sm">
             <div class="bg-blue-950 text-white font-black px-3 py-1.5 text-xs tracking-wider uppercase flex justify-between items-center">
                 <span>Clinical examination detail</span>
@@ -245,6 +172,61 @@
                             <div><label class="block text-[8px] font-bold text-gray-400">Axis</label><input type="text" id="sub_os_axis" onblur="formatAxis(this)" placeholder="—" class="w-full border text-center font-extrabold bg-white rounded"></div>
                             <div><label class="block text-[8px] font-bold text-gray-400">Add</label><input type="text" id="sub_os_add" onblur="formatAddPower(this)" placeholder="+1.00" class="w-full border text-center font-extrabold bg-white rounded"></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="block_pgp" class="border border-amber-200 bg-amber-50/5 rounded-xl p-3 space-y-2">
+            <div class="flex justify-between items-center border-b border-amber-100 pb-0.5 no-print">
+                <h4 class="text-[11px] font-black text-amber-950 uppercase tracking-wider">PRESENT GLASSES PRESCRIPTION (PGP)</h4>
+                <label class="flex items-center gap-1 text-[9px] text-amber-900 font-bold cursor-pointer bg-amber-100/60 px-1.5 py-0.5 rounded">
+                    <input type="checkbox" id="chk_print_pgp" checked onchange="toggleBoxPrintVisibility('block_pgp', this)"> Include in Print/PDF
+                </label>
+            </div>
+            <h4 class="text-[12px] font-black text-amber-950 uppercase tracking-wider hidden print:block">PRESENT GLASSES PRESCRIPTION (PGP)</h4>
+            
+            <div class="text-xs md:text-sm space-y-2">
+                <table class="w-full border border-amber-200 text-center">
+                    <thead>
+                        <tr class="bg-gray-50 text-[10px] font-bold text-gray-400 uppercase">
+                            <th class="p-1.5 border-b border-r w-[15%]">PGP</th>
+                            <th class="p-1.5 border-b border-r w-[17%]">SPH</th>
+                            <th class="p-1.5 border-b border-r w-[17%]">CYL</th>
+                            <th class="p-1.5 border-b border-r w-[17%]">AXIS</th>
+                            <th class="p-1.5 border-b border-r w-[17%]">VA</th>
+                            <th class="p-1.5 border-b w-[17%]">NV</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-1.5 font-bold bg-gray-50 border-r border-b text-[11px]">RE (DV)</td>
+                            <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_cyl" onblur="formatDiopter(this); verifyAxisRequirement('pgp_dv_re_cyl', 'pgp_dv_re_axis')" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_axis" onblur="formatAxis(this)" placeholder="—" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r border-b"><input type="text" id="pgp_dv_re_va" onblur="formatVisualAcuity(this)" placeholder="6/6" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-b"><input type="text" id="pgp_dv_re_nv" placeholder="N-6" class="w-full text-center focus:outline-none"></td>
+                        </tr>
+                        <tr>
+                            <td class="p-1.5 font-bold bg-gray-50 border-r text-[11px]">LE (DV)</td>
+                            <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_sph" onblur="formatDiopter(this)" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_cyl" onblur="formatDiopter(this); verifyAxisRequirement('pgp_dv_le_cyl', 'pgp_dv_le_axis')" placeholder="0.00" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_axis" onblur="formatAxis(this)" placeholder="—" class="w-full text-center focus:outline-none"></td>
+                            <td class="p-1.5 border-r"><input type="text" id="pgp_dv_le_va" onblur="formatVisualAcuity(this)" placeholder="6/6" class="w-full text-center focus:outline-none"></td>
+                            <td><input type="text" id="pgp_dv_le_nv" placeholder="N-6" class="w-full text-center focus:outline-none"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                    <div class="flex items-center gap-1 text-[11px] font-semibold">
+                        <span>ADD:</span>
+                        <input type="text" id="pgp_add_ou" onblur="formatAddPower(this)" placeholder="+1.00" class="w-24 text-center border-b border-dashed focus:outline-none font-extrabold text-gray-900">
+                        <span class="font-bold">OU</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-[11px] font-semibold">
+                        <span>Lens Type:</span>
+                        <input type="text" id="pgp_lens_type" placeholder="Progressive, Bifocal..." class="w-full border-b border-dashed focus:outline-none font-extrabold text-gray-900">
                     </div>
                 </div>
             </div>
@@ -382,7 +364,7 @@
             <div class="space-y-3">
                 <div>
                     <label class="block text-gray-400 font-bold uppercase text-[9px] mb-0.5">Diagnosis</label>
-                    <textarea id="plan_diagnosis" rows="1" class="w-full border rounded-xl p-2 font-extrabold text-gray-900 bg-slate-50/40 focus:bg-white focus:outline-none" placeholder="Clinical metrics details..."></textarea>
+                    <textarea id="plan_diagnosis" rows="1" class="w-full border rounded-xl p-2 font-bold text-gray-900 bg-slate-50/40 focus:bg-white focus:outline-none" placeholder="Clinical assessment summary details..."></textarea>
                 </div>
                 <div>
                     <label class="block text-gray-400 font-bold uppercase text-[9px] mb-0.5">Investigations Advice</label>
@@ -393,7 +375,7 @@
             <div class="space-y-3">
                 <div>
                     <label class="block text-gray-400 font-bold uppercase text-[9px] mb-0.5">Management & Rx Routine</label>
-                    <textarea id="plan_management" rows="1" class="w-full border rounded-xl p-2 text-gray-900 bg-slate-50/40 focus:bg-white focus:outline-none font-extrabold" placeholder="Prescriptions, eye drops routines..."></textarea>
+                    <textarea id="plan_management" rows="1" class="w-full border rounded-xl p-2 text-gray-900 bg-slate-50/40 focus:bg-white focus:outline-none font-extrabold" placeholder="Prescriptions tapering schedules..."></textarea>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
